@@ -37,6 +37,41 @@ RSpec.describe "Dogs", type: :request do
       expect(dog.name).to eq 'Buster'
     end
   end
+
+  describe "PATCH /update" do 
+    it "updates a dog" do 
+      dog_params = {
+        dog: {
+          name: 'Goon',
+          age: 3,
+          enjoys: 'Eating',
+          image: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.earth.com%2Fnews%2Fnational-dog-day-celebrating-all-the-ways-that-dogs-make-life-better%2F&psig=AOvVaw3-j9wFcbZC8vIv4a9nd1jW&ust=1701546238962000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJig--r_7oIDFQAAAAAdAAAAABAS'
+        }
+      }
+
+      post '/dogs', params: dog_params 
+
+      dog = Dog.first 
+
+      updated_dog_params = {
+        dog: {
+          name: 'Goon',
+          age: 5,
+          enjoys: 'Eating Cats',
+          image: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.earth.com%2Fnews%2Fnational-dog-day-celebrating-all-the-ways-that-dogs-make-life-better%2F&psig=AOvVaw3-j9wFcbZC8vIv4a9nd1jW&ust=1701546238962000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJig--r_7oIDFQAAAAAdAAAAABAS'
+        }
+      }
+
+      patch "/dogs/#{dog.id}", params: updated_dog_params
+
+      expect(response).to have_http_status(200)
+
+      updated_dog = Dog.find(dog.id)
+      expect(updated_dog.age).to eq 5
+      expect(updated_dog.enjoys).to eq 'Eating Cats'
+    end
+  end
+
   describe "DELETE /destroy" do 
     it "deletes a dog" do 
       dog_params = {
