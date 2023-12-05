@@ -94,4 +94,38 @@ RSpec.describe "Dogs", type: :request do
       expect(dogs).to be_empty
     end
   end
+
+  describe "cannot create a dog without valid attributes" do 
+    it "doesn't create a dog without a name" do 
+      dog_params = {
+        dog: {
+          age: 1,
+          enjoys: 'Barking',
+          image: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.nationalgeographic.com%2Fanimals%2Fmammals%2Ffacts%2Fdomestic-dog&psig=AOvVaw3-j9wFcbZC8vIv4a9nd1jW&ust=1701546238962000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJig--r_7oIDFQAAAAAdAAAAABAK'
+        }
+      }
+
+      post '/dogs', params: dog_params
+
+      expect(response.status).to eq 422
+
+      dog = JSON.parse(response.body)
+      expect(dog['name']).to include "can't be blank"
+    end
+
+    it "cannot create a cat without an age" do 
+      dog_params = {
+        dog: {
+          name: 'Buster',
+          enjoys: 'Barking',
+          image: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.nationalgeographic.com%2Fanimals%2Fmammals%2Ffacts%2Fdomestic-dog&psig=AOvVaw3-j9wFcbZC8vIv4a9nd1jW&ust=1701546238962000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJig--r_7oIDFQAAAAAdAAAAABAK'
+        }
+      }
+
+      post '/dogs', params: dog_params
+      dog = JSON.parse(response.body)
+      expect(response).to have_http_status(422)
+      expect(dog['age']).to include "can't be blank"
+    end
+  end
 end
