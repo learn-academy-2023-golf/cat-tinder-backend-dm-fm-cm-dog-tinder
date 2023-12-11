@@ -1,5 +1,4 @@
 class DogsController < ApplicationController
-    require 'rails_helper'
 
     def index
         dogs = Dog.all
